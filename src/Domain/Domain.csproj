@@ -9,4 +9,9 @@
     <PackageReference Include="MediatR.Contracts" />
     <PackageReference Include="Vogen" />
   </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>ImposterSyndrome.Domain.UnitTests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 </Project>

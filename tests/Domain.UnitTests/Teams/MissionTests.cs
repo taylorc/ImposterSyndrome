@@ -1,3 +1,4 @@
+using ErrorOr;
 using ImposterSyndrome.Domain.Teams;
 
 namespace ImposterSyndrome.Domain.UnitTests.Teams;
@@ -22,5 +23,35 @@ public class MissionTests
         areEqual.Should().Be(isEqual);
         id1.Value.Should().Be(guid1);
         id2.Value.Should().Be(guid2);
+    }
+
+    [Fact]
+    public void Complete_WhenStatusIsNotComplete_UpdatesStatusAndReturnsSuccess()
+    {
+        // Arrange
+        var mission = Mission.Create("Test mission");
+
+        // Act
+        var result = mission.Complete();
+
+        // Assert
+        Assert.Equal(MissionStatus.Complete, mission.Status);
+        Assert.IsType<Success>(result.Value);
+    }
+
+    [Fact]
+    public void Complete_WhenStatusIsAlreadyComplete_ReturnsAlreadyCompletedError()
+    {
+        // Arrange
+        var mission = Mission.Create("Test mission");
+        mission.Complete(); // Set status to Complete
+
+        // Act
+        var result = mission.Complete();
+
+        // Assert
+        Assert.Equal(MissionStatus.Complete, mission.Status);
+        Assert.True(result.IsError);
+        Assert.Equal(MissionErrors.AlreadyCompleted, result.Errors[0]);
     }
 }

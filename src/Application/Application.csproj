@@ -17,5 +17,11 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>ImposterSyndrome.Application.UnitTests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
   
 </Project>
