@@ -5,3 +5,5 @@ global using Microsoft.EntityFrameworkCore;
 global using NSubstitute.ExceptionExtensions;
 global using ImposterSyndrome.Application.Common.Interfaces;
 global using MockQueryable.NSubstitute;
+global using Bogus;
+global using FluentValidation.TestHelper;

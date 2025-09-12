@@ -6,6 +6,9 @@ using System.Collections.Generic;
 namespace ImposterSyndrome.Application.UnitTests.UseCases.Heroes.Commands.CreateHero;
 public class CreateHeroCommandHandlerTests
 {
+    private CreateHeroCommandValidator _validator = new();
+    private Faker _faker = new Faker();
+
     [Fact]
     public async Task Handle_ValidRequest_AddsHeroAndSavesChanges_ReturnsHeroId()
     {
@@ -63,5 +66,54 @@ public class CreateHeroCommandHandlerTests
 
         // Act & Assert
         await Assert.ThrowsAsync<DbUpdateException>(() => handler.Handle(command, CancellationToken.None));
+    }
+
+    [Fact]
+    public void Should_Have_Error_When_Name_Is_Empty()
+    {
+        var command = new CreateHeroCommand(
+            "",
+            _faker.Lorem.Word(),
+            new List<CreateHeroPowerDto>()
+        );
+
+        var result = _validator.TestValidate(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.Name);
+    }
+
+    [Fact]
+    public void Should_Have_Error_When_Alias_Is_Empty()
+    {
+        var command = new CreateHeroCommand(
+            _faker.Lorem.Word(),
+            "",
+            new List<CreateHeroPowerDto>()
+        );
+
+        var result = _validator.TestValidate(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.Alias);
+    }
+
+    [Fact]
+    public void Should_Not_Have_Error_When_All_Fields_Are_Valid()
+    {
+        var powers = new Faker<CreateHeroPowerDto>()
+            .CustomInstantiator(f => new CreateHeroPowerDto(
+                f.Lorem.Word(),
+                f.Random.Int(1, 10)
+            ))
+            .Generate(3);
+
+        var command = new CreateHeroCommand(
+            _faker.Lorem.Word(),
+            _faker.Lorem.Word(),
+            powers
+        );
+
+        var result = _validator.TestValidate(command);
+
+        result.ShouldNotHaveAnyValidationErrors();
     }
 }
