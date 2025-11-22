@@ -65,7 +65,7 @@ public class UpdateHeroCommandHandlerTests
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
 
-        // Assert
+        // Asserty
         Assert.True(result.IsError);
         Assert.Contains(result.Errors, e => e == HeroErrors.NotFound);
         await dbContext.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
