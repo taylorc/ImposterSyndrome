@@ -58,6 +58,10 @@ var api = builder
     .WithReference(db)
     .WaitForCompletion(migrationService);
 
+var webApp = builder.AddViteApp("WebUI", "../../src/WebUI", "pnpm")
+    .WithPnpmPackageInstallation()
+    .WaitFor(api);
+
 // Configure Application Insights and Log Analytics only if in publish mode
 // When running locally, use Aspire Dashboard instead
 if (builder.ExecutionContext.IsPublishMode)

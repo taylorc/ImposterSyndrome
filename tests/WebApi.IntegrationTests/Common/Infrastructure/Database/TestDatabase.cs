@@ -1,7 +1,7 @@
+using ImposterSyndrome.Infrastructure.Persistence;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Respawn;
-using ImposterSyndrome.Infrastructure.Persistence;
 using System.Data.Common;
 
 namespace WebApi.IntegrationTests.Common.Infrastructure.Database;
@@ -36,7 +36,9 @@ public class TestDatabase : IAsyncDisposable
         using var dbContext = new ApplicationDbContext(options);
         await dbContext.Database.MigrateAsync();
 
-        _checkpoint = await Respawner.CreateAsync(_connectionString,
+        await using var connection = DbConnection;
+        await connection.OpenAsync();
+        _checkpoint = await Respawner.CreateAsync(connection,
             new RespawnerOptions { TablesToIgnore = ["__EFMigrationsHistory"] });
     }
 
@@ -44,7 +46,9 @@ public class TestDatabase : IAsyncDisposable
 
     public async Task ResetAsync()
     {
-        await _checkpoint.ResetAsync(_connectionString);
+        await using var connection = DbConnection;
+        await connection.OpenAsync();
+        await _checkpoint.ResetAsync(connection);
     }
 
     public async ValueTask DisposeAsync()
