@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ImposterSyndrome.Application.Common.Interfaces;
+﻿using ImposterSyndrome.Application.Common.Interfaces;
+using ImposterSyndrome.Domain.Accessories;
 using ImposterSyndrome.Domain.Common.Interfaces;
 using ImposterSyndrome.Domain.Heroes;
 using ImposterSyndrome.Domain.Teams;
 using ImposterSyndrome.Infrastructure.Persistence.Configuration;
+using Microsoft.EntityFrameworkCore;
+using SmartEnum.EFCore;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace ImposterSyndrome.Infrastructure.Persistence;
 
@@ -14,6 +17,8 @@ public class ApplicationDbContext(DbContextOptions options)
     public DbSet<Hero> Heroes => AggregateRootSet<Hero>();
 
     public DbSet<Team> Teams => AggregateRootSet<Team>();
+
+    public DbSet<Accessory> Accessories => AggregateRootSet<Accessory>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -25,6 +30,8 @@ public class ApplicationDbContext(DbContextOptions options)
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         base.ConfigureConventions(configurationBuilder);
+
+        configurationBuilder.ConfigureSmartEnum();
 
         configurationBuilder.RegisterAllInVogenEfCoreConverters();
     }

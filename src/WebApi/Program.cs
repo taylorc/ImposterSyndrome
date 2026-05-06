@@ -35,6 +35,7 @@ app.UseStaticFiles();
 
 app.MapHeroEndpoints();
 app.MapTeamEndpoints();
+app.MapAccessoryEndpoints();
 app.UseEventualConsistencyMiddleware();
 
 app.MapDefaultEndpoints();

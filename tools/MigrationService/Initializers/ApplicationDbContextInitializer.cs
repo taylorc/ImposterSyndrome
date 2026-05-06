@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using ImposterSyndrome.Domain.Heroes;
 using ImposterSyndrome.Domain.Teams;
 using ImposterSyndrome.Infrastructure.Persistence;
+using ImposterSyndrome.Infrastructure.Persistence.Migrations;
+using ImposterSyndrome.Domain.Accessories;
 
 namespace MigrationService.Initializers;
 
@@ -11,6 +13,26 @@ public class ApplicationDbContextInitializer(ApplicationDbContext dbContext) : D
     private const int NumHeroes = 20;
 
     private const int NumTeams = 5;
+
+    private readonly BarbellExercise[] _barbellExercise =
+    [
+        BarbellExercise.Squat,
+        BarbellExercise.Deadlift,
+        BarbellExercise.BenchPress,
+        BarbellExercise.OverheadPress
+    ];
+
+    private readonly string[] _accessoryNames =
+    [
+        "Lifting Belt",
+        "Wrist Wraps",
+        "Knee Sleeves",
+        "Lifting Straps",
+        "Chalk",
+        "Lifting Shoes",
+        "Foam Roller",
+        "Resistance Bands"
+    ];
 
     private readonly string[] _superHeroNames =
     [
@@ -72,9 +94,27 @@ public class ApplicationDbContextInitializer(ApplicationDbContext dbContext) : D
             await using var transaction = await DbContext.Database.BeginTransactionAsync(cancellationToken);
             var heroes = await SeedHeroes();
             await SeedTeams(heroes);
+            await SeedAccessories();
             // await DbContext.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         });
+    }
+
+    private async Task SeedAccessories()
+    {
+        if (DbContext.Accessories.Any())
+            return;
+
+        var faker = new Faker<Accessory>()
+            .CustomInstantiator(f =>
+            {
+                var name = f.PickRandom(_accessoryNames);
+                return Accessory.Create(name, f.PickRandom(_barbellExercise));
+            });
+
+        var accessories = faker.Generate(_accessoryNames.Length);
+        await DbContext.Accessories.AddRangeAsync(accessories);
+        await DbContext.SaveChangesAsync();
     }
 
     private async Task<List<Hero>> SeedHeroes()
