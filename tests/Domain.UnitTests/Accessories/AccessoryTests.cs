@@ -1,4 +1,5 @@
 ﻿using ImposterSyndrome.Domain.Accessories;
+using ImposterSyndrome.Domain.Common.Enums;
 using ImposterSyndrome.Domain.Heroes;
 using System;
 using System.Collections.Generic;

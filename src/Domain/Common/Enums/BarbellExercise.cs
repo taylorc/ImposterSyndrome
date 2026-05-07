@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ImposterSyndrome.Domain.Accessories;
+namespace ImposterSyndrome.Domain.Common.Enums;
 
 public class BarbellExercise : SmartEnum<BarbellExercise, string>
 {

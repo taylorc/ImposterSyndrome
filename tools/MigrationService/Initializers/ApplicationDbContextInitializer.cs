@@ -5,6 +5,7 @@ using ImposterSyndrome.Domain.Teams;
 using ImposterSyndrome.Infrastructure.Persistence;
 using ImposterSyndrome.Infrastructure.Persistence.Migrations;
 using ImposterSyndrome.Domain.Accessories;
+using ImposterSyndrome.Domain.Common.Enums;
 
 namespace MigrationService.Initializers;
 

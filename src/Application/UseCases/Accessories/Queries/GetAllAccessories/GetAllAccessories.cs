@@ -11,7 +11,7 @@ public record GetAllAccessories : IRequest<IReadOnlyList<AccessoryDto>>;
 
 public record AccessoryDto(Guid Id, string Name, string BarbellExercise);
 
-internal sealed class GetAllAccessoriesHandler(IApplicationDbContext dbContext)
+internal sealed class GetAllAccessoriesQueryHandler(IApplicationDbContext dbContext)
     : IRequestHandler<GetAllAccessories, IReadOnlyList<AccessoryDto>>
 {
     public async Task<IReadOnlyList<AccessoryDto>> Handle(
