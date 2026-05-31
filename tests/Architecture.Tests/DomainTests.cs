@@ -24,9 +24,8 @@ public class DomainModel(ITestOutputHelper output) : TestBase
             .And().DoNotHaveName("ThrowHelper")
             .And().DoNotHaveNameEndingWith("Spec")
             .And().DoNotHaveNameEndingWith("Errors")
+            .And().DoNotHaveNameMatching(".*ReadOnlyArray*")
             .And().MeetCustomRule(new IsNotEnumRule());
-
-        domainModels.GetTypes().Dump(output);
 
         // Act
         var result = domainModels

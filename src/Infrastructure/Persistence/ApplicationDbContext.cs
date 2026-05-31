@@ -2,6 +2,7 @@
 using ImposterSyndrome.Domain.Accessories;
 using ImposterSyndrome.Domain.Common.Interfaces;
 using ImposterSyndrome.Domain.Heroes;
+using ImposterSyndrome.Domain.Programme.Wendler531;
 using ImposterSyndrome.Domain.Teams;
 using ImposterSyndrome.Infrastructure.Persistence.Configuration;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,8 @@ public class ApplicationDbContext(DbContextOptions options)
     public DbSet<Team> Teams => AggregateRootSet<Team>();
 
     public DbSet<Accessory> Accessories => AggregateRootSet<Accessory>();
+
+    public DbSet<Wendler531Programme> Wendler531Programmes => AggregateRootSet<Wendler531Programme>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

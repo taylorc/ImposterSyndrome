@@ -19,7 +19,7 @@ builder.Services.AddScoped<EntitySaveChangesInterceptor>();
 builder.Services.AddScoped<ICurrentUserService, MigrationUserService>();
 builder.Services.AddSingleton(TimeProvider.System);
 
-builder.AddSqlServerDbContext<ApplicationDbContext>("CleanArchitecture",
+builder.AddNpgsqlDbContext<ApplicationDbContext>("CleanArchitecture",
     null,
     options =>
     {

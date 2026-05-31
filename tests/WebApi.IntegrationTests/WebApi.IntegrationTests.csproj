@@ -14,7 +14,7 @@
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="Respawn" />
     <PackageReference Include="Testcontainers" />
-    <PackageReference Include="Testcontainers.MsSql" />
+    <PackageReference Include="Testcontainers.PostgreSql" />
     <PackageReference Include="Polly" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit.v3" />

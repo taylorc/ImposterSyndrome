@@ -1,35 +1,29 @@
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using Polly;
-using Testcontainers.MsSql;
+using Testcontainers.PostgreSql;
 
 namespace WebApi.IntegrationTests.Common.Infrastructure.Database;
 
-/// <summary>
-/// Wrapper for SQL Server container
-/// </summary>
-public class SqlServerContainer : IAsyncDisposable
+public class PostgresContainer : IAsyncDisposable
 {
-    private readonly MsSqlContainer _container = new MsSqlBuilder()
-        .WithImage("mcr.microsoft.com/mssql/server:2022-CU14-ubuntu-22.04")
+    private readonly PostgreSqlContainer _container = new PostgreSqlBuilder()
         .WithName($"CleanArchitecture-IntegrationTests-{Guid.NewGuid()}")
         .WithPassword("Password123")
-        .WithPortBinding(1433, true)
         .WithAutoRemove(true)
         .Build();
 
     private const int MaxRetries = 5;
 
-    public SqlConnection? Connection { get; private set; }
+    public NpgsqlConnection? Connection { get; private set; }
 
     public async Task InitializeAsync()
     {
         await StartWithRetry();
-        Connection = new SqlConnection(_container.GetConnectionString());
+        Connection = new NpgsqlConnection(_container.GetConnectionString());
     }
 
     private async Task StartWithRetry()
     {
-        // NOTE: For some reason the container sometimes fails to start up.  Add in a retry to protect against this
         var policy = Policy.Handle<InvalidOperationException>()
             .WaitAndRetryAsync(MaxRetries, _ => TimeSpan.FromSeconds(5));
 

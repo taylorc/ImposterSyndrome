@@ -1,4 +1,4 @@
-using EntityFramework.Exceptions.SqlServer;
+using EntityFramework.Exceptions.PostgreSQL;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ImposterSyndrome.Application.Common.Interfaces;
@@ -11,7 +11,7 @@ public static class DependencyInjection
 {
     public static void AddInfrastructure(this IHostApplicationBuilder builder)
     {
-        builder.AddSqlServerDbContext<ApplicationDbContext>("CleanArchitecture",
+        builder.AddNpgsqlDbContext<ApplicationDbContext>("CleanArchitecture",
             null,
             options =>
             {

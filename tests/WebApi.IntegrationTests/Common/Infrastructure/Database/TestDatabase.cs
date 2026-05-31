@@ -1,36 +1,30 @@
 using ImposterSyndrome.Infrastructure.Persistence;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Respawn;
 using System.Data.Common;
 
 namespace WebApi.IntegrationTests.Common.Infrastructure.Database;
 
-/// <summary>
-/// Manages the schema and data for the database container
-/// </summary>
 public class TestDatabase : IAsyncDisposable
 {
-    private readonly SqlServerContainer _sqlServer = new();
+    private readonly PostgresContainer _postgres = new();
     private Respawner _checkpoint = null!;
     private string _connectionString = null!;
 
-    /// <summary>
-    /// Create and seed a database
-    /// </summary>
     public async Task InitializeAsync()
     {
-        await _sqlServer.InitializeAsync();
+        await _postgres.InitializeAsync();
 
-        var builder = new SqlConnectionStringBuilder(_sqlServer.Connection!.ConnectionString)
+        var builder = new NpgsqlConnectionStringBuilder(_postgres.Connection!.ConnectionString)
         {
-            InitialCatalog = "CleanArchitecture-IntegrationTests"
+            Database = "CleanArchitecture-IntegrationTests"
         };
 
         _connectionString = builder.ConnectionString;
 
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlServer(_connectionString)
+            .UseNpgsql(_connectionString)
             .Options;
 
         using var dbContext = new ApplicationDbContext(options);
@@ -39,10 +33,14 @@ public class TestDatabase : IAsyncDisposable
         await using var connection = DbConnection;
         await connection.OpenAsync();
         _checkpoint = await Respawner.CreateAsync(connection,
-            new RespawnerOptions { TablesToIgnore = ["__EFMigrationsHistory"] });
+            new RespawnerOptions
+            {
+                TablesToIgnore = ["__EFMigrationsHistory"],
+                DbAdapter = DbAdapter.Postgres
+            });
     }
 
-    public DbConnection DbConnection => new SqlConnection(_connectionString);
+    public DbConnection DbConnection => new NpgsqlConnection(_connectionString);
 
     public async Task ResetAsync()
     {
@@ -53,6 +51,6 @@ public class TestDatabase : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        await _sqlServer.DisposeAsync();
+        await _postgres.DisposeAsync();
     }
 }

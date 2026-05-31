@@ -18,20 +18,11 @@ builder.AddAzureAppServiceEnvironment("plan").ConfigureInfrastructure(infra =>
     };
 });
 
-var sqlServer = builder
-    .AddAzureSqlServer("sql")
-    .RunAsContainer(container =>
-    {
-        // Configure SQL Server to run locally as a container
-        container.WithLifetime(ContainerLifetime.Persistent);
+var postgres = builder
+    .AddPostgres("postgres")
+    .WithLifetime(ContainerLifetime.Persistent);
 
-        // If desired, set SQL Server Port to a constant value
-        //container.WithHostPort(1800);
-    });
-
-var db = sqlServer
-    .AddDatabase("CleanArchitecture", "clean-architecture")
-    .WithDropDatabaseCommand();
+var db = postgres.AddDatabase("CleanArchitecture");
 
 var migrationService = builder.AddProject<MigrationService>("migrations")
     .PublishAsAzureAppServiceWebsite((_, site) =>
@@ -50,7 +41,7 @@ var migrationService = builder.AddProject<MigrationService>("migrations")
         site.SiteConfig.AppSettings.Add(new BicepValue<AppServiceNameValuePair>(envSetting));
     })
     .WithReference(db)
-    .WaitFor(sqlServer);
+    .WaitFor(postgres);
 
 var api = builder
     .AddProject<WebApi>("api")

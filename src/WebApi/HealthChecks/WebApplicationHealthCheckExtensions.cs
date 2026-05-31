@@ -1,4 +1,4 @@
-﻿using HealthChecks.UI.Client;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -30,13 +30,13 @@ public static class WebApplicationHealthCheckExtensions
     public static void AddHealthChecks(this IServiceCollection services, IConfiguration config)
     {
         services.AddHealthChecks()
-            // Check 1: Check the SQL Server Connectivity (no EF, no DBContext, hardly anything to go wrong)
-            .AddSqlServer(
-                name: "SQL Server",
+            // Check 1: Check the PostgreSQL Connectivity (no EF, no DBContext, hardly anything to go wrong)
+            .AddNpgSql(
+                name: "PostgreSQL",
                 connectionString: config["ConnectionStrings:DefaultConnection"]!,
-                healthQuery: $"-- SqlServerHealthCheck{Environment.NewLine}SELECT 123;",
+                healthQuery: "SELECT 1;",
                 failureStatus: HealthStatus.Unhealthy,
-                tags: ["db", "sql", "sqlserver"])
+                tags: ["db", "sql", "postgresql"])
 
             // Check 2: Check the Entity Framework DbContext (requires the DbContext Options, DI, Interceptors, Configurations, etc. to all be correct), and
             // then run a sample query to test important data
