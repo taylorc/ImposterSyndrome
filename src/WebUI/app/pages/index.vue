@@ -5,15 +5,14 @@
 
     <div class="flex flex-wrap justify-center mx-auto lg:w-full md:w-5/6 xl:shadow-small-blue">
 
-        <a href="#" class="block w-1/2 py-10 text-center border lg:w-1/4">
+        <NuxtLink to="/programme" class="block w-1/2 py-10 text-center border lg:w-1/4">
             <div>
                 <Icon name="material-symbols:analytics-rounded" class="block mx-auto text-8xl text-green-900" />
-
                 <p class="pt-4 text-sm font-medium capitalize font-body text-green-900 lg:text-lg md:text-base md:pt-6">
-                    portfolio
-                </p>
+                    programme
+                </p>                
             </div>
-        </a>
+        </NuxtLink>
 
         <a href="#" class="block w-1/2 py-10 text-center border lg:w-1/4">
             <div>
