@@ -20,7 +20,8 @@ builder.AddAzureAppServiceEnvironment("plan").ConfigureInfrastructure(infra =>
 
 var postgres = builder
     .AddPostgres("postgres")
-    .WithLifetime(ContainerLifetime.Persistent);
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithPgAdmin();
 
 var db = postgres.AddDatabase("CleanArchitecture");
 
